@@ -107,6 +107,8 @@ char *getLine(void)
  * @max: the maximum number of times the string should be splitted
  * Set this to 0 to split infinitely
  *
+ * @group_quote: text inside quote should be grouped as one token
+ *
  * Return: A null-terminated array of strings.
  * NULL is returned if malloc failed or if the string
  * could not be split; this could be because:
@@ -116,21 +118,17 @@ char *getLine(void)
  * - delimiters is NULL
  * - delimiters is empty
  */
-char **split(char *string, char *delimiter, unsigned int max)
+char **split(char *string, char *delimiter, unsigned int max, bool group_quote)
 {
-	char **array, prev, curr;
-	size_t arr_size;
-	unsigned int arr_ind, str_ind, i;
+	char **array, prev = '\0', curr;
+	size_t arr_size = 2;
+	unsigned int arr_ind = 0, str_ind, i;
 	bool flipped;
+	int quote_index;
 
 	if (!(string && *string && delimiter && *delimiter))
 		return (NULL);
-
-	arr_ind = 0;
-	arr_size = 2;
 	array = malloc(NPTRS(arr_size));
-	prev = '\0';
-
 	for (str_ind = 0; string[str_ind]; str_ind++)
 	{
 		curr = string[str_ind];
@@ -143,8 +141,12 @@ char **split(char *string, char *delimiter, unsigned int max)
 				break;
 			}
 		if (prev == '\0' && flipped == false)
-		{
 			appendStr(&array, &arr_size, &string[str_ind], arr_ind++);
+		if (group_quote && (!flipped && (curr == '\'' || curr == '"')))
+		{
+			quote_index = findquote(string + str_ind + 1, curr);
+			if (quote_index != -1)
+				str_ind += quote_index + 1;
 		}
 		if (max && max + 1 == arr_ind)
 			break;

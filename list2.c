@@ -97,7 +97,7 @@ node *from_strarr(char **array)
 	for (i = 0; array[i]; i++)
 	{
 		str = _strdup(array[i]);
-		arr = split(str, "=", 1);
+		arr = split(str, "=", 1, false);
 		var = arr[0];
 		val = arr[1];
 		add_node_end(&head, var, val);

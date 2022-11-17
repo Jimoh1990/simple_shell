@@ -19,15 +19,19 @@ void printerr(const char *message);
 void printout(const char *message);
 void fprinterr(char *message);
 void fprintout(char *message);
+void prompt(state *self);
 
 
 /* quote */
 int findquote(char *str, char quote);
-void comment(char *av[]);
+void comment(char *string);
+bool should_quote(const char *string);
+char *remove_quotes(char *string);
 
 /* line */
 char *getlines(int fd);
-char **split(char *string, char *delimiter, unsigned int max);
+char **split(char *string, char *delimiter,
+		unsigned int max, bool group_quote);
 
 /* find */
 char *findcmd(const char *command, const char *PATH);
@@ -40,7 +44,8 @@ int non_interactive(state *self, int fd);
 int execute(const char *program, char **args, char **env);
 int runline(state *self, char *line);
 bool runbuiltin(state *self, char **arguments);
-int runprogram(state *self, char **arguments);
+bool runprogram(state *self, char **arguments);
+bool runalias(state *self, char **command);
 
 /*tokenizefile*/
 char ***tokenizefiles(char *line);

@@ -15,8 +15,9 @@ exit_status shellexit(state *self, char **arguments)
 
 	if (arg == NULL)
 	{
+		status = self->_errno;
 		deinit(self);
-		exit(0);
+		exit(status);
 	}
 	if (checkatoi(arg) == false)
 	{
@@ -43,7 +44,7 @@ exit_status shellexit(state *self, char **arguments)
 exit_status shellenv(state *self, char **arguments)
 {
 	(void)arguments;
-	print_list(self->env);
+	print_list(self->env, false);
 	return (0);
 }
 
@@ -113,31 +114,40 @@ exit_status shellunsetenv(state *self, char **arguments)
  */
 exit_status shellcd(state *self, char **arguments)
 {
+	struct stat dir;
+	char *cwd = getcwd(NULL, 0);
 	char *path = arguments[0];
-	char *cwd;
-	node *pwd;
+	node *pwd = set_default(&(self->env), "PWD", cwd);
 
-	cwd = getcwd(NULL, 0);
-	pwd = set_default(&(self->env), "PWD", cwd);
 	set_default(&(self->env), "OLDPWD", cwd);
+	set_default(&(self->env), "HOME", "/root");
 	free(cwd);
 	cwd = NULL;
 
 	if (!path || !_strcmp(path, "~"))
 		path = get_node(self->env, "HOME")->val;
 	else if (!_strcmp(path, "-"))
+	{
 		path = get_node(self->env, "OLDPWD")->val;
-	do {
-		if (access(path, X_OK) == -1)
-			break;
-		if (chdir(path) == -1)
-			break;
-		cwd = getcwd(NULL, 0);
+		printout(path),	printout("\n");
+	}
+	else if (path && path[0] == '-')
+	{
+		fprinterr(format("%s: %d: cd: Illegal option -",
+			self->prog, self->lineno));
+		write(STDIN_FILENO, path + 1, 1);
+		printout("\n");
+		return (2);
+	}
+	if (stat(path, &dir) == 0 && S_ISDIR(dir.st_mode)
+		&& dir.st_mode & S_IXUSR)
+	{
+		cwd = (chdir(path), getcwd(NULL, 0));
 		set_node(&(self->env), "OLDPWD", pwd->val);
 		set_node(&(self->env), "PWD", cwd);
 		free(cwd);
 		return (0);
-	} while (false);
+	}
 	fprinterr(format(
 		"%s: %d: cd: can't cd to %s\n",
 		self->prog, self->lineno, path

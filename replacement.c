@@ -25,6 +25,8 @@ char *replace(state *self, char *var)
 		appendChar(&(self->errno_buf), &(bufsize), '\0', len);
 		return (self->errno_buf);
 	}
+	else if (var[0] && !var[1])
+		return ("$");
 	n = get_node(self->env, var + 1);
 	if (!n)
 		return ("");

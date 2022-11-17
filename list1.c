@@ -5,15 +5,18 @@
  * -> VAR=VAL
  *
  * @head: the head of the linked list
- *
+ * @quote: checks if its env or alias to be printed
  * Return: nothing
  */
-void print_list(node *head)
+void print_list(node *head, bool quote)
 {
 	if (!head)
 		return;
-	fprintout(format("%s=%s\n", head->var, head->val));
-	print_list(head->next);
+	if (quote)
+		fprintout(format("%s='%s'\n", head->var, head->val));
+	else
+		fprintout(format("%s=%s\n", head->var, head->val));
+	print_list(head->next, quote);
 }
 
 
