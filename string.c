@@ -36,6 +36,9 @@ int _strlen(const char *s)
 {
 	int i, lenght;
 
+	if (s == NULL)
+		return (-1);
+
 	lenght = 0;
 
 	for (i = 0; s[i] != '\0'; i++)
@@ -43,6 +46,25 @@ int _strlen(const char *s)
 		lenght++;
 	}
 	return (lenght);
+}
+
+/**
+ * count_str - count the number of strings in a string array
+ *
+ * @stri: the string to be counted
+ *
+ * Return: the number of counted strings
+ */
+int count_str(char **stri)
+{
+	int i;
+
+	i = 0;
+	if (stri == NULL)
+		return (i);
+	for (i = 0; stri[i] != NULL; i++)
+		;
+	return (i);
 }
 
 /**

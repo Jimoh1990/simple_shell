@@ -39,7 +39,7 @@ char *joinpath(const char *base, const char *child)
 	baselen = childlen = index = 0;
 	has_sep = false;
 
-	if (!(base && child))
+	if (base == NULL || child == NULL)
 		return (NULL);
 
 	baselen = _strlen(base);
@@ -49,7 +49,7 @@ char *joinpath(const char *base, const char *child)
 		has_sep = true;
 
 	newpath = malloc(
-		/* create space for a nullbyte and space for the / */
+		/* create space for a nullbyte and forward-slash */
 		baselen + childlen + 2
 	);
 

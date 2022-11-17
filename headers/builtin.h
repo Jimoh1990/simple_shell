@@ -18,13 +18,14 @@ typedef exit_status(*builtincmd)(state *, char **);
  * @parts: an array of different parts of a line separated
  * by semicolon
  * @tokens: an array of tokens found in a line/part
+ * @command: and array of tokens gotten from parsing alias
  * @_errno: a number indicating the error of the last command ran
  * @lineno: the current line number
  * @fd: open file descriptor where commands are read from
  * @prog: the program name used to start the shell
  * @pid_buf: a buffer that'll be used to hold the program's pid
+ * @buf: a free buffer that any function can make use of
  * @errno_buf: a buffer that'll be used to hold the program's errno
- * @pid: the process ID of the shell
  */
 struct state
 {
@@ -34,10 +35,12 @@ struct state
 	char *prog;
 	char *pid_buf;
 	char *errno_buf;
+	char *buf;
 	char *content;
 	char **lines;
 	char **parts;
 	char **tokens;
+	char **command;
 	node *env;
 	node *aliases;
 };

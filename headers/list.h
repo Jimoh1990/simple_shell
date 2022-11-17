@@ -22,7 +22,7 @@ struct Node
 typedef struct Node node;
 
 size_t listlen(node *head);
-void print_list(node *head);
+void print_list(node *head, bool quote);
 node *add_node(node **head, const char *var, const char *val);
 node *add_node_end(node **head, const char *var, const char *val);
 void free_list(node *head);
