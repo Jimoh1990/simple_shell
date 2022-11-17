@@ -24,7 +24,9 @@ state *init(char *prog, char **env)
 	self->errno_buf = malloc(NCHARS(12));
 	self->pid_buf = format("%d", getpid());
 	self->parts = NULL;
-	self->fd = STDIN_FILENO;
+	self->command = NULL;
+	self->fd = 0;
+	self->buf = NULL;
 
 	return (self);
 }
@@ -47,9 +49,12 @@ void deinit(state *self)
 	free(self->lines);
 	free(self->tokens);
 	free(self->parts);
-	close(self->fd);
+	if (self->fd)
+		close(self->fd);
 	free(self->pid_buf);
 	free(self->errno_buf);
+	free(self->command);
+	free(self->buf);
 	free(self);
 }
 
@@ -72,6 +77,8 @@ void cleanup(state *self)
 	self->parts = NULL;
 	free(self->tokens);
 	self->tokens = NULL;
+	free(self->command);
+	self->command = NULL;
 }
 
 /**
@@ -92,7 +99,7 @@ int open_file(state *self, char *path)
 			"%s: %d: cannot open %s: No such file\n",
 			self->prog, 0, path));
 		deinit(self);
-		exit(2);
+		exit(127);
 	}
 	if (access(path, R_OK) == -1)
 	{
@@ -101,7 +108,7 @@ int open_file(state *self, char *path)
 				"%s: %d: cannot open %s: Permission denied\n",
 				self->prog, 0, path));
 			deinit(self);
-			exit(2);
+			exit(127);
 		}
 	}
 	fd = open(path, O_RDONLY);
