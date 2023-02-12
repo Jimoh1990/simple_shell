@@ -168,7 +168,7 @@ class HBNBCommand(cmd.Cmd):
             print(len(matches))
 
     def do_update(self, line):
-        """Updates an instance by adding or updating attribute.
+        """Updates an instance by adding or updating attribute
         """
         if line == "" or line is None:
             print("** class name missing **")
