@@ -1,22 +1,3 @@
-AirBnB Clone Documentation
-
-
-jimoh sikiru
-0. README, AUTHORS
-mandatory
-Write a README.md:
-description of the project
-description of the command interpreter:
-how to start it
-how to use it
-examples
-You should have an AUTHORS file at the root of your repository, listing all individuals having contributed content to the repository. For format, reference Docker’s AUTHORS page
-You should use branches and pull requests on GitHub - it will help you as team to organize your work
-Repo:
-
-GitHub repository: AirBnB_clone
-File: README.md, AUTHORS
-
 AirBnB Clone
 AirBnB Clone is a project to replicate the functionality of the AirBnB website. The project provides a command line interface for managing objects like houses, apartments, rooms, etc.
 
