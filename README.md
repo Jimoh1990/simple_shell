@@ -1,4 +1,4 @@
-AirBnB Clon
+AirBnB Clonr
 AirBnB Clone is a project to replicate the functionality of the AirBnB website. The project provides a command line interface for managing objects like houses, apartments, rooms, etc.
 
 Command Interpreter
